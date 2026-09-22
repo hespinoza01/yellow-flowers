@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import '../flowers/data/flower_asset_repository.dart';
 import '../flowers/presentation/flower_fullscreen_view.dart';
 import '../messages/data/romantic_messages.dart';
-import '../spotify/data/spotify_playback_service.dart';
-import '../spotify/domain/spotify_exceptions.dart';
-import '../spotify/presentation/spotify_status_banner.dart';
+import '../music/data/music_player_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,10 +17,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final _flowerRepository = FlowerAssetRepository();
   final _random = Random();
+  final _musicPlayer = MusicPlayerService();
 
   String? _assetPath;
   late String _message = _pickRandomMessage();
-  String? _spotifyErrorMessage;
+  String? _musicErrorMessage;
   bool _loading = true;
   bool _refreshing = false;
 
@@ -30,9 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _loadFlower();
-    // Spotify tiene su propio timeout interno (ver SpotifyPlaybackService) y
-    // no debe bloquear la foto: se dispara en paralelo, no se espera acá.
     _playRandomSong();
+  }
+
+  @override
+  void dispose() {
+    _musicPlayer.dispose();
+    super.dispose();
   }
 
   String _pickRandomMessage() =>
@@ -56,16 +59,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _playRandomSong() async {
     String? errorMessage;
     try {
-      await SpotifyPlaybackService.playRandomFromPlaylist();
-    } on SpotifyIntegrationException catch (e) {
-      errorMessage = e.message;
-    } catch (e, st) {
-      debugPrint('[YF_DEBUG] Spotify error no tipado: $e\n$st');
+      final played = await _musicPlayer.playRandom();
+      if (!played) {
+        errorMessage = 'Agrega canciones en assets/audio/';
+      }
+    } catch (_) {
       errorMessage = 'No se pudo reproducir la música';
     }
 
     if (!mounted) return;
-    setState(() => _spotifyErrorMessage = errorMessage);
+    setState(() => _musicErrorMessage = errorMessage);
   }
 
   Future<void> _refreshAll() async {
@@ -96,9 +99,41 @@ class _SplashScreenState extends State<SplashScreen> {
       message: _message,
       refreshing: _refreshing,
       onRefreshAll: _refreshAll,
-      banner: _spotifyErrorMessage != null
-          ? SpotifyStatusBanner(message: _spotifyErrorMessage!)
+      banner: _musicErrorMessage != null
+          ? _MusicStatusBanner(message: _musicErrorMessage!)
           : null,
+    );
+  }
+}
+
+class _MusicStatusBanner extends StatelessWidget {
+  const _MusicStatusBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.music_off, color: Colors.white70, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -60,11 +60,5 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-        <!-- Requerido para poder abrir Spotify vía deep link (spotify:playlist:...) -->
-        <package android:name="com.spotify.music"/>
-        <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:scheme="spotify"/>
-        </intent>
     </queries>
 </manifest>
