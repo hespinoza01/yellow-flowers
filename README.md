@@ -1,53 +1,49 @@
-# Yellow Flowers 🌼
+# Flores Amarillas 🌼
 
 App Android (Flutter) que, cada vez que se abre, muestra una foto random de
-flores amarillas + reproduce una canción random de una playlist de Spotify.
-Programa recordatorios locales cada 21 de marzo y 21 de septiembre (día de
-las flores amarillas, hemisferio norte/sur).
+flores amarillas + reproduce una canción random de música local + un mensaje
+romántico random. Programa recordatorios locales cada 21 de marzo y 21 de
+septiembre (día de las flores amarillas, hemisferio norte/sur).
 
-## Setup pendiente antes de usar
+100% local: sin backend, sin login, sin APIs externas en runtime.
 
-Ver checklist completo en el plan (`~/.claude/plans/melodic-kindling-fox.md`).
-Resumen de lo que falta configurar:
+## Funciones
+
+- Foto random a pantalla completa (`assets/images/flowers/`, 16 fotos
+  generadas con MiniMax).
+- Canción random en loop (`assets/audio/`, mp3 propios del usuario — **no
+  incluidos en este repo**, ver abajo).
+- Mensaje romántico random con botón "Ver mensaje" (`lib/features/messages/`,
+  16 mensajes).
+- Botón "Cambiar todo": refresca foto + mensaje + canción juntos.
+- Notificación local anual el 21 de marzo (hemisferio norte) y 21 de
+  septiembre (hemisferio sur) — ambas por default, recordando abrir la app.
+- Ícono y nombre de app propios ("Flores Amarillas").
+
+## Setup para correr este repo
 
 ### 1. Fotos
 
-Agregar fotos `.jpg`/`.png` de flores amarillas en `assets/images/flowers/`
-(la carpeta está vacía salvo un `.gitkeep`). Sin fotos, la app muestra un
-mensaje pidiéndolas en vez de crashear.
+Ya incluidas en `assets/images/flowers/` (16 fotos generadas con IA).
+Agregar más `.jpg`/`.png` ahí es opcional — se eligen random automático, sin
+tocar código.
 
-### 2. Spotify Developer Dashboard
+### 2. Música — **poné tus propios MP3, no están en este repo**
 
-1. Crear app en https://developer.spotify.com/dashboard (cuenta **Premium**
-   requerida como owner).
-2. Redirect URI: `yellowflowers://callback` (no crítico para el flujo actual,
-   que usa solo App Remote, pero el Dashboard lo pide igual).
-3. Settings → Android packages: agregar `com.haroldespinoza.yellow_flowers`
-   + SHA-1 del debug keystore:
-   ```
-   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
-   ```
-4. Settings → Users and Access: agregar el email/usuario de Spotify de la
-   esposa (obligatorio en 2026, o el login da 403).
-5. Copiar el **Client ID** (no hace falta Client Secret, PKCE es público).
+Los archivos de audio no se suben al repo (son música con copyright, no se
+puede distribuir públicamente). Para correr la app:
 
-### 3. Completar `lib/core/config/app_config.dart`
+1. Creá la carpeta `assets/audio/` si no existe.
+2. Copiá ahí tus mp3 (los que quieras que suenen).
+3. `flutter pub get` (por si el pubspec cambió) y compilá normal.
 
-- `spotifyClientId`: el Client ID del paso anterior.
-- `spotifyPlaylistId`: el ID de la playlist (segmento final de
-  `open.spotify.com/playlist/<ID>` o de `spotify:playlist:<ID>`).
+Sin mp3 en esa carpeta, la app muestra "Agrega canciones en assets/audio/"
+en vez de crashear.
 
-### 4. Dispositivo de prueba
+### 3. Mensajes
 
-- Debe tener la app oficial de Spotify instalada (cuenta free sirve para
-  reproducir).
-- App Remote SDK no funciona bien en emulador — usar dispositivo físico.
-
-## Limitación conocida
-
-Los recordatorios anuales se reprograman en cada apertura de la app (no hay
-backend). Si la app no se abre nunca entre un 21-marzo/21-sept y el
-siguiente, ese ciclo puntual no se reprograma solo.
+Editar/agregar en `lib/features/messages/data/romantic_messages.dart`
+— lista simple de strings.
 
 ## Comandos útiles
 
@@ -55,6 +51,43 @@ siguiente, ese ciclo puntual no se reprograma solo.
 flutter pub get
 flutter analyze
 flutter test
-flutter build apk --debug
-flutter install   # con un dispositivo Android conectado
+flutter build apk --debug              # debug, firma debug
+flutter build apk --release            # producción, requiere android/key.properties (ver abajo)
+flutter install                        # con un dispositivo Android conectado
 ```
+
+## Firma de release
+
+`android/key.properties` (gitignoreado, nunca se sube) apunta a un keystore
+externo al repo. Sin ese archivo, `flutter build apk --release` cae
+automático a firma debug (para que el build no se rompa en CI/otros
+devs) — no sirve para publicar, pero compila.
+
+Formato de `android/key.properties`:
+```
+storePassword=...
+keyPassword=...
+keyAlias=...
+storeFile=/ruta/absoluta/al/keystore.jks
+```
+
+## Limitación conocida
+
+Los recordatorios anuales se reprograman en cada apertura de la app (no hay
+backend). Si la app no se abre nunca entre un 21-marzo/21-sept y el
+siguiente, ese ciclo puntual no se reprograma solo.
+
+## Historial de integración de música (por qué es local y no Spotify)
+
+Se intentaron dos integraciones con Spotify antes de llegar a mp3 locales:
+
+1. **Spotify App Remote SDK** — falló con `UserNotAuthorizedException`
+   persistente pese a package/SHA1/allowlist/Premium correctos en el
+   Dashboard. Límite de la plataforma no resuelto.
+2. **Spotify Web Playback SDK** (vía WebView embebido) — falló con
+   `EMEError: No supported keysystem was found`. El WebView de Android
+   embebido en apps nativas no expone DRM/Widevine, requisito duro del SDK.
+   Limitación de plataforma, no de esta implementación.
+
+Reemplazado por reproductor local (`audioplayers`) sin ninguna de esas
+limitaciones.

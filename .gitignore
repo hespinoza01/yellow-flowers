@@ -51,3 +51,7 @@ app.*.map.json
 android/key.properties
 *.jks
 *.keystore
+
+# Música con copyright: nunca se distribuye públicamente. Poner mp3 propios
+# acá localmente para compilar (ver README).
+assets/audio/*.mp3
