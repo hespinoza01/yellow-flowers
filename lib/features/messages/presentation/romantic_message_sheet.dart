@@ -1,13 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
-import '../data/romantic_messages.dart';
-
-/// Botón flotante que abre un mensaje romántico random, con opción de ver
-/// otro.
+/// Botón flotante que abre el mensaje romántico actual (el que corresponde
+/// a la foto/canción actuales). Para ver un mensaje distinto hay que usar
+/// el botón de "cambiar todo" en la pantalla principal, no hay refresh acá.
 class RomanticMessageButton extends StatelessWidget {
-  const RomanticMessageButton({super.key});
+  const RomanticMessageButton({super.key, required this.message});
+
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +24,15 @@ class RomanticMessageButton extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => const _RomanticMessageSheet(),
+      builder: (_) => _RomanticMessageSheet(message: message),
     );
   }
 }
 
-class _RomanticMessageSheet extends StatefulWidget {
-  const _RomanticMessageSheet();
+class _RomanticMessageSheet extends StatelessWidget {
+  const _RomanticMessageSheet({required this.message});
 
-  @override
-  State<_RomanticMessageSheet> createState() => _RomanticMessageSheetState();
-}
-
-class _RomanticMessageSheetState extends State<_RomanticMessageSheet> {
-  final _random = Random();
-  late String _message = _pickRandom();
-
-  String _pickRandom() =>
-      RomanticMessages.all[_random.nextInt(RomanticMessages.all.length)];
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +51,7 @@ class _RomanticMessageSheetState extends State<_RomanticMessageSheet> {
             const Icon(Icons.favorite, color: Colors.redAccent, size: 32),
             const SizedBox(height: 16),
             Text(
-              _message,
+              message,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,
@@ -71,25 +61,12 @@ class _RomanticMessageSheetState extends State<_RomanticMessageSheet> {
               ),
             ),
             const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton.icon(
-                  onPressed: () => setState(() => _message = _pickRandom()),
-                  icon: const Icon(Icons.refresh, color: Colors.amber),
-                  label: const Text(
-                    'Otro mensaje',
-                    style: TextStyle(color: Colors.amber),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Cerrar',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ),
-              ],
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Cerrar',
+                style: TextStyle(color: Colors.white70),
+              ),
             ),
           ],
         ),

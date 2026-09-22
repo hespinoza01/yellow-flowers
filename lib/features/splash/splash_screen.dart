@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../flowers/data/flower_asset_repository.dart';
 import '../flowers/presentation/flower_fullscreen_view.dart';
+import '../messages/data/romantic_messages.dart';
 import '../spotify/data/spotify_playback_service.dart';
 import '../spotify/domain/spotify_exceptions.dart';
 import '../spotify/presentation/spotify_status_banner.dart';
@@ -15,10 +18,13 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final _flowerRepository = FlowerAssetRepository();
+  final _random = Random();
 
   String? _assetPath;
+  late String _message = _pickRandomMessage();
   String? _spotifyErrorMessage;
   bool _loading = true;
+  bool _refreshing = false;
 
   @override
   void initState() {
@@ -28,6 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
     // no debe bloquear la foto: se dispara en paralelo, no se espera acá.
     _playRandomSong();
   }
+
+  String _pickRandomMessage() =>
+      RomanticMessages.all[_random.nextInt(RomanticMessages.all.length)];
 
   Future<void> _loadFlower() async {
     String? assetPath;
@@ -55,8 +64,20 @@ class _SplashScreenState extends State<SplashScreen> {
       errorMessage = 'No se pudo reproducir la música';
     }
 
-    if (!mounted || errorMessage == null) return;
+    if (!mounted) return;
     setState(() => _spotifyErrorMessage = errorMessage);
+  }
+
+  Future<void> _refreshAll() async {
+    setState(() {
+      _refreshing = true;
+      _message = _pickRandomMessage();
+    });
+
+    await Future.wait([_loadFlower(), _playRandomSong()]);
+
+    if (!mounted) return;
+    setState(() => _refreshing = false);
   }
 
   @override
@@ -72,6 +93,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return FlowerFullscreenView(
       assetPath: _assetPath,
+      message: _message,
+      refreshing: _refreshing,
+      onRefreshAll: _refreshAll,
       banner: _spotifyErrorMessage != null
           ? SpotifyStatusBanner(message: _spotifyErrorMessage!)
           : null,

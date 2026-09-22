@@ -23,5 +23,17 @@ class RomanticMessages {
         'y otra vez, sin cansarme nunca.',
     'Te amo no solo por quién sos conmigo, sino por quién sos con el '
         'mundo. Sos mi persona favorita, mi amor.',
+    'Cada mañana que despierto a tu lado es un motivo más para sonreír. '
+        'Gracias por ser mi hogar.',
+    'No necesito buscar la felicidad en ningún otro lado: la encontré el '
+        'día que te encontré a vos.',
+    'Sos la razón por la que creo en las cosas lindas de la vida. Te amo '
+        'con todo lo que tengo.',
+    'Quiero envejecer a tu lado, ver crecer nuestra historia y seguir '
+        'eligiéndote en cada capítulo nuevo.',
+    'Tu risa es mi canción favorita, y tu abrazo, mi lugar seguro. Feliz '
+        'día de las flores amarillas, mi amor.',
+    'Hoy, mañana y siempre: vos sos y vas a seguir siendo lo más '
+        'importante en mi vida.',
   ];
 }
