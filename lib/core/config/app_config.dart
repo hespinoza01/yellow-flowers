@@ -3,8 +3,7 @@ class AppConfig {
   AppConfig._();
 
   /// Client ID de la app creada en developer.spotify.com/dashboard.
-  /// TODO: reemplazar con tu Client ID real.
-  static const String spotifyClientId = 'TODO_SPOTIFY_CLIENT_ID';
+  static const String spotifyClientId = 'd08067995189494f86228a32af0bfcab';
 
   /// Debe coincidir exacto con el Redirect URI configurado en el Dashboard
   /// y con el intent-filter en AndroidManifest.xml.
