@@ -11,8 +11,7 @@ class AppConfig {
 
   /// ID de la playlist (el código después de `spotify:playlist:` en la URI,
   /// o el segmento final de la URL de compartir de la playlist).
-  /// TODO: reemplazar con el ID de tu playlist.
-  static const String spotifyPlaylistId = 'TODO_PLAYLIST_ID';
+  static const String spotifyPlaylistId = '1rZ6nT6hQiLCMUgYVD3HEx';
 
   /// Hora del día (24h, hora local) a la que dispara el recordatorio anual.
   static const int reminderHour = 9;
