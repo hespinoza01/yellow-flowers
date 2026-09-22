@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../messages/presentation/romantic_message_sheet.dart';
+
 class FlowerFullscreenView extends StatelessWidget {
   const FlowerFullscreenView({
     super.key,
@@ -14,6 +16,7 @@ class FlowerFullscreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      floatingActionButton: const RomanticMessageButton(),
       body: Stack(
         fit: StackFit.expand,
         children: [

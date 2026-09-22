@@ -50,7 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
       await SpotifyPlaybackService.playRandomFromPlaylist();
     } on SpotifyIntegrationException catch (e) {
       errorMessage = e.message;
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('[YF_DEBUG] Spotify error no tipado: $e\n$st');
       errorMessage = 'No se pudo reproducir la música';
     }
 
