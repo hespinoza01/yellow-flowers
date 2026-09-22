@@ -5,27 +5,12 @@ sealed class SpotifyIntegrationException implements Exception {
   final String message;
 }
 
-class SpotifyNotInstalledException extends SpotifyIntegrationException {
-  const SpotifyNotInstalledException()
-      : super('Instala Spotify para escuchar música');
-}
-
-class SpotifyNoConnectionException extends SpotifyIntegrationException {
-  const SpotifyNoConnectionException()
-      : super('Sin conexión, no se pudo reproducir música');
-}
-
-class SpotifyNotAuthorizedException extends SpotifyIntegrationException {
-  const SpotifyNotAuthorizedException()
-      : super('Esta cuenta no está autorizada. Contacta al administrador de la app.');
-}
-
 class SpotifyNotConfiguredException extends SpotifyIntegrationException {
   const SpotifyNotConfiguredException()
-      : super('Falta configurar Spotify (Client ID / playlist) en app_config.dart');
+      : super('Falta configurar la playlist en app_config.dart');
 }
 
-class SpotifyPlaybackFailedException extends SpotifyIntegrationException {
-  const SpotifyPlaybackFailedException([String? detail])
-      : super('No se pudo reproducir la música${detail != null ? ': $detail' : ''}');
+class SpotifyLaunchFailedException extends SpotifyIntegrationException {
+  const SpotifyLaunchFailedException()
+      : super('No se pudo abrir Spotify. Instálalo para escuchar música.');
 }

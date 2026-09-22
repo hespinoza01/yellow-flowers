@@ -34,21 +34,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- Requerido por spotify_sdk (getAccessToken/LoginActivity, login
-             OAuth que respeta el allowlist "Users and Access" del
-             Dashboard). Sin este intent-filter, LoginActivity crashea con
-             IllegalStateException. -->
-        <activity
-            android:name="com.spotify.sdk.android.auth.browser.RedirectUriReceiverActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="yellowflowers" android:host="callback"/>
-            </intent-filter>
-        </activity>
-
         <!-- Requeridos por flutter_local_notifications para el scheduling
              de los recordatorios anuales (no se auto-declaran en el
              manifest del plugin). -->
@@ -74,6 +59,12 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Requerido para poder abrir Spotify vía deep link (spotify:playlist:...) -->
+        <package android:name="com.spotify.music"/>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="spotify"/>
         </intent>
     </queries>
 </manifest>

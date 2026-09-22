@@ -49,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  crypto:
-    dependency: transitive
-    description:
-      name: crypto
-      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.7"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -176,14 +168,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      sha256: "2a743920d81b7910627f68ee2c9ac1fc0bfee32b9fc3403587d7c6791ca12f80"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.12.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -325,46 +309,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.2"
-  spotify_sdk:
-    dependency: "direct main"
-    description:
-      name: spotify_sdk
-      sha256: dc9916d5e440e57ce4e89fd12c35e80ea4a8fd0806335a3be16647c97fd6288a
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
-  spotify_sdk_android:
-    dependency: transitive
-    description:
-      name: spotify_sdk_android
-      sha256: af78d1c7b1da8bf375f6c2a33743260c716cc6791c8284d29f9a173e310e22b4
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
-  spotify_sdk_ios:
-    dependency: transitive
-    description:
-      name: spotify_sdk_ios
-      sha256: "8308510916c5be7be2eba09d7036e1ac2ed422d6f7aeecdbdbb2a808041b3f74"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
-  spotify_sdk_platform_interface:
-    dependency: transitive
-    description:
-      name: spotify_sdk_platform_interface
-      sha256: "66b9ffa05df29f48ef59996e5920dacea200346e39e5a7b13f3df90e363c1f77"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
-  spotify_sdk_web:
-    dependency: transitive
-    description:
-      name: spotify_sdk_web
-      sha256: "0058afc09f5d65ce76b49e40a91fb202042a6bd61ef1850c08f51ed043170859"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
   stack_trace:
     dependency: transitive
     description:
@@ -389,14 +333,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      sha256: "397b146f97613b83d84bdccb439bc8d0f3aebb6c1d14a9641e6f24201c490b2d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.2"
   term_glyph:
     dependency: transitive
     description:
@@ -429,6 +365,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      sha256: f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.2"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      sha256: "611e87fb320b70d1dd721dc46af89c98aceccea9b31fde49e084591414e0c610"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.33"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      sha256: "8faa1aab294f1ab4040b43660c887b0418d5fa4f0cffef76a484e6aa1092eb4a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.4.2"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      sha256: "10f86fef4c2c43563fa6c211ff9cf757adf4d3ab762c56bd430664a947d70cd0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.3"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      sha256: "5e835a3b869c2d70325349c81c5a45c28e20791265b67b2669da6b08c5cd5201"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.6"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      sha256: "552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      sha256: "85c81589622fbc87c1c683aaea164d3604a7777495a79d91e39ffcdec39ddb34"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.3"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      sha256: "6c5ad3f22cd4c38e089b81963b3cd7bb83b111b2df5dce008bb066162f42e429"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.6"
   vector_math:
     dependency: transitive
     description:
@@ -479,4 +479,4 @@ packages:
     version: "3.1.4"
 sdks:
   dart: ">=3.13.4 <4.0.0"
-  flutter: ">=3.47.1"
+  flutter: ">=3.44.0"
