@@ -7,10 +7,15 @@ class AppBootstrap {
   AppBootstrap._();
 
   static Future<void> run() async {
-    final initialized = await NotificationService.init();
-    if (!initialized) return;
+    try {
+      final initialized = await NotificationService.init();
+      if (!initialized) return;
 
-    await NotificationService.requestPermission();
-    await NotificationScheduler.scheduleOrRescheduleYearlyReminders();
+      await NotificationService.requestPermission();
+      await NotificationScheduler.scheduleOrRescheduleYearlyReminders();
+    } catch (_) {
+      // Nunca debe bloquear el arranque de la app: la foto y la música
+      // importan más que el recordatorio anual.
+    }
   }
 }

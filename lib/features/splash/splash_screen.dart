@@ -23,41 +23,39 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _bootstrap();
+    _loadFlower();
+    // Spotify tiene su propio timeout interno (ver SpotifyPlaybackService) y
+    // no debe bloquear la foto: se dispara en paralelo, no se espera acá.
+    _playRandomSong();
   }
 
-  Future<void> _bootstrap() async {
-    final results = await Future.wait([
-      _loadRandomFlower(),
-      _playRandomSong(),
-    ]);
+  Future<void> _loadFlower() async {
+    String? assetPath;
+    try {
+      assetPath = await _flowerRepository.pickRandom();
+    } catch (_) {
+      assetPath = null;
+    }
 
     if (!mounted) return;
     setState(() {
-      _assetPath = results[0];
+      _assetPath = assetPath;
       _loading = false;
     });
   }
 
-  Future<String?> _loadRandomFlower() async {
-    try {
-      return await _flowerRepository.pickRandom();
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<String?> _playRandomSong() async {
+  Future<void> _playRandomSong() async {
+    String? errorMessage;
     try {
       await SpotifyPlaybackService.playRandomFromPlaylist();
-      return null;
     } on SpotifyIntegrationException catch (e) {
-      _spotifyErrorMessage = e.message;
-      return null;
+      errorMessage = e.message;
     } catch (_) {
-      _spotifyErrorMessage = 'No se pudo reproducir la música';
-      return null;
+      errorMessage = 'No se pudo reproducir la música';
     }
+
+    if (!mounted || errorMessage == null) return;
+    setState(() => _spotifyErrorMessage = errorMessage);
   }
 
   @override

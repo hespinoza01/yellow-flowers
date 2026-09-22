@@ -73,7 +73,10 @@ class NotificationScheduler {
           priority: Priority.high,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      // Inexact: evita requerir el permiso especial "Alarmas y recordatorios"
+      // (Android 12+), que el usuario tendría que otorgar a mano en Settings.
+      // Un recordatorio una vez al año no necesita precisión al segundo.
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 }

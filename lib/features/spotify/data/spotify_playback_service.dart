@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:spotify_sdk/spotify_sdk.dart'
     hide SpotifyNotInstalledException;
 import 'package:spotify_sdk/spotify_sdk.dart' as sdk
@@ -30,12 +32,12 @@ class SpotifyPlaybackService {
       await SpotifySdk.connectToSpotifyRemote(
         clientId: AppConfig.spotifyClientId,
         redirectUrl: AppConfig.spotifyRedirectUri,
-      );
+      ).timeout(_connectTimeout);
 
       await SpotifySdk.play(
         spotifyUri: 'spotify:playlist:${AppConfig.spotifyPlaylistId}',
-      );
-      await SpotifySdk.setShuffle(shuffle: true);
+      ).timeout(_commandTimeout);
+      await SpotifySdk.setShuffle(shuffle: true).timeout(_commandTimeout);
     } on sdk.SpotifyNotInstalledException {
       throw const SpotifyNotInstalledException();
     } on SpotifyAuthenticationException catch (_) {
@@ -46,6 +48,14 @@ class SpotifyPlaybackService {
       throw SpotifyPlaybackFailedException(e.message);
     } on SpotifyException catch (e) {
       throw SpotifyPlaybackFailedException(e.message);
+    } on TimeoutException {
+      throw const SpotifyPlaybackFailedException('Tiempo de espera agotado');
     }
   }
+
+  // La primera conexión puede requerir que el usuario acepte el permiso
+  // dentro de la app de Spotify, por eso el timeout de connect es más largo
+  // que el de los comandos de reproducción.
+  static const _connectTimeout = Duration(seconds: 20);
+  static const _commandTimeout = Duration(seconds: 8);
 }

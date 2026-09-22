@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show AssetManifest, rootBundle;
 
 /// Descubre las fotos de flores amarillas empaquetadas en
 /// assets/images/flowers/ y elige una al azar, sin necesidad de
@@ -14,13 +13,11 @@ class FlowerAssetRepository {
   static const String _assetsFolder = 'assets/images/flowers/';
 
   Future<List<String>> listFlowerAssets() async {
-    final manifestJson = await rootBundle.loadString('AssetManifest.json');
-    final manifest = json.decode(manifestJson) as Map<String, dynamic>;
+    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
 
-    return manifest.keys
-        .where((path) =>
-            path.startsWith(_assetsFolder) && !path.endsWith('.gitkeep'))
-        .toList();
+    return manifest.listAssets().where(
+          (path) => path.startsWith(_assetsFolder) && !path.endsWith('.gitkeep'),
+        ).toList();
   }
 
   /// Devuelve el path de un asset random, o null si no hay fotos cargadas
