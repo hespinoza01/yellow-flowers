@@ -1,30 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:yellow_flowers/main.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:yellow_flowers/core/utils/date_utils.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUpAll(() {
+    tz_data.initializeTimeZones();
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  tz.Location utc() => tz.getLocation('UTC');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('antes del 21 de marzo del año actual -> usa ese mismo año', () {
+    final now = tz.TZDateTime(utc(), 2026, 1, 10, 8, 0);
+    final result = nextAnnualOccurrence(now, month: 3, day: 21, hour: 9, minute: 0);
+    expect(result.year, 2026);
+    expect(result.month, 3);
+    expect(result.day, 21);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('exacto 21 de marzo antes de la hora -> mismo día', () {
+    final now = tz.TZDateTime(utc(), 2026, 3, 21, 8, 0);
+    final result = nextAnnualOccurrence(now, month: 3, day: 21, hour: 9, minute: 0);
+    expect(result.year, 2026);
+    expect(result.month, 3);
+    expect(result.day, 21);
+    expect(result.hour, 9);
+  });
+
+  test('exacto 21 de marzo después de la hora -> salta al año siguiente', () {
+    final now = tz.TZDateTime(utc(), 2026, 3, 21, 10, 0);
+    final result = nextAnnualOccurrence(now, month: 3, day: 21, hour: 9, minute: 0);
+    expect(result.year, 2027);
+    expect(result.month, 3);
+    expect(result.day, 21);
+  });
+
+  test('después del 21 de septiembre -> salta al año siguiente', () {
+    final now = tz.TZDateTime(utc(), 2026, 10, 1, 8, 0);
+    final result = nextAnnualOccurrence(now, month: 9, day: 21, hour: 9, minute: 0);
+    expect(result.year, 2027);
+    expect(result.month, 9);
+    expect(result.day, 21);
   });
 }
